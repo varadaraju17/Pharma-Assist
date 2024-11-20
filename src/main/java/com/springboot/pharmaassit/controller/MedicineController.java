@@ -47,6 +47,11 @@ public class MedicineController {
 		String messgae = medicineService.uploadMedicines(file,pharmacyId);
 		return appResponseBuilder.success(HttpStatus.CREATED,"File Uploaded Succesfully");
 	}
-
+	@GetMapping("/medicines/")
+	public ResponseEntity<ResponseStructure<List<MedicineResponse>>> findMedicineOrIngridientsByName(@PathVariable String medicineName,@PathVariable String ingridients){
+		List<MedicineResponse> medicineResponses = medicineService.findByNameIgnoreCaseContainingOrIngredientsIgnoreCaseContaining(medicineName, ingridients);
+		return appResponseBuilder.success(HttpStatus.FOUND, "Medicine Found Successfully", medicineResponses);
+	}
+	
 	
 }
