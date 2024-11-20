@@ -46,5 +46,38 @@ public class AdminController {
 		AdminResponse adminResponse = adminService.saveAdmin(adminRequest);
 				return appResponseBuilder.success(HttpStatus.CREATED, "admin created Succesfully!!", adminResponse);
 	}	
-	
+	@Operation(description = "The end point used find the admin based on the unique id ",
+			responses = {
+					@ApiResponse(responseCode = "302",description = "admin found "),
+					@ApiResponse(responseCode = "404",description = "user not found by Id",
+					content = {@Content(schema = @Schema(implementation = ErrorStructure.class))
+					})
+	})
+	@GetMapping("/admins/{adminId}")
+	public ResponseEntity<ResponseStructure<AdminResponse>> findAdminById(@PathVariable String adminId){
+		AdminResponse response = adminService.findAdminById(adminId);
+		return appResponseBuilder.success(HttpStatus.FOUND, "user found Succesfully", response);
+	}
+
+	@Operation(description = "The end used to find the all admins",responses = {
+			@ApiResponse(responseCode = "202",description = "all admins found"),
+			@ApiResponse(responseCode = "404",description = "user not found by id",
+			content = {@Content(schema = @Schema(implementation = ErrorStructure.class))
+			})})
+	@GetMapping("/admins")
+	public ResponseEntity<ResponseStructure<List<AdminResponse>>> findAllAdmin(){
+		List<AdminResponse> response = adminService.findAllAdmin();
+		return appResponseBuilder.success(HttpStatus.FOUND,"all admins found succesfully!!", response);
+	}
+	@Operation(description = "The end used to update the admin by id",
+			responses = { 
+					@ApiResponse(responseCode = "202",description = "admin found"),
+					@ApiResponse(responseCode = "404",description = "user not found by id",
+					content = {@Content(schema = @Schema(implementation = ErrorStructure.class))
+			})})
+	@PutMapping("/admins/{adminId}")
+	public ResponseEntity<ResponseStructure<AdminResponse>> updateAdminById(@RequestBody AdminRequest adminRequest, @PathVariable String adminId){
+		AdminResponse adminResponse = adminService.updateAdminById(adminRequest, adminId);
+		return appResponseBuilder.success(HttpStatus.OK, "admin updated by id succesfuly", adminResponse);
+	}
 }
