@@ -26,6 +26,16 @@ private Pharmacy pharmacy;
 @ManyToOne
 private Medicine medicine;
 
+@ManyToOne
+private Bill bill;
+
+
+public Bill getBill() {
+	return bill;
+}
+public void setBill(Bill bill) {
+	this.bill = bill;
+}
 public Pharmacy getPharmacy() {
 	return pharmacy;
 }
