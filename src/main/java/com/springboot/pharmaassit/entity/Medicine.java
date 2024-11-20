@@ -33,6 +33,15 @@ public class Medicine {
 	@ManyToOne
 	private Pharmacy pharmacy;
 	
+	@OneToMany(mappedBy = "medicine")
+	private List<Transaction> transactions;
+	
+	public List<Transaction> getTransactions() {
+		return transactions;
+	}
+	public void setTransactions(List<Transaction> transactions) {
+		this.transactions = transactions;
+	}
 	public Pharmacy getPharmacy() {
 		return pharmacy;
 	}
