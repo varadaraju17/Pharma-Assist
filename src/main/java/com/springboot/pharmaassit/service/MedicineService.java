@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.springboot.pharmaassit.entity.Medicine;
 import com.springboot.pharmaassit.entity.Pharmacy;
 import com.springboot.pharmaassit.enums.Form;
+import com.springboot.pharmaassit.exception.NoMedicinesFoundException;
 import com.springboot.pharmaassit.exception.PharmacyNotFoundByIdException;
 import com.springboot.pharmaassit.mapper.MedicineMapper;
 import com.springboot.pharmaassit.repository.MedicineRepository;
@@ -91,7 +92,14 @@ public class MedicineService {
 		medicineRepository.save(medicine);
 
 	}
-	
+	public List<MedicineResponse> findByNameIgnoreCaseContainingOrIngredientsIgnoreCaseContaining(String medicineName, String ingridients) {
+		List<Medicine> medicines = medicineRepository
+				.findByMedicineNameLikeIgnoreCaseOrIngridientsLike(medicineName, ingridients);
+		if (medicines.isEmpty()) {
+			throw new NoMedicinesFoundException("Medicines Not Found");
+		}
+		return medicines.stream().map(mapper:: mapToMedicineResponse).toList();
+	}	
 	
 	
 
