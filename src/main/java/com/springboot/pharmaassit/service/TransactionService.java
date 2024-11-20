@@ -11,6 +11,7 @@ import com.springboot.pharmaassit.entity.Transaction;
 import com.springboot.pharmaassit.enums.TransactionType;
 import com.springboot.pharmaassit.exception.MedicineOutOfStockException;
 import com.springboot.pharmaassit.exception.NoMedicinesFoundException;
+import com.springboot.pharmaassit.exception.NoTransactionsFoundException;
 import com.springboot.pharmaassit.exception.PharmacyNotFoundByIdException;
 import com.springboot.pharmaassit.mapper.TransactionMapper;
 import com.springboot.pharmaassit.repository.MedicineRepository;
@@ -67,6 +68,14 @@ public class TransactionService {
 
 		return transactionMapper.mapToTransactionResponse(transaction);
 	}
-
+	@Transactional
+	public List<Transaction> getAllTransactionsAndClear() {
+		List<Transaction> transactions = transactionRepository.findAll();
+		if (transactions.isEmpty()) {
+			throw new NoTransactionsFoundException("No transactions available");
+		}
+		transactionRepository.deleteAll();
+		return transactions;
+	}
 	
 }
