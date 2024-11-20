@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.springboot.pharmaassit.entity.Admin;
+import com.springboot.pharmaassit.exception.AdminNotFoundByIdException;
 import com.springboot.pharmaassit.mapper.AdminMapper;
 import com.springboot.pharmaassit.repository.AdminRepository;
 import com.springboot.pharmaassit.requestdtos.AdminRequest;
@@ -32,5 +33,19 @@ public class AdminService {
 		adminRepository.save(admin);
 		return adminMapper.mapToAdminResponse(admin); 
 	}
-	
+	public AdminResponse findAdminById(String adminId) {
+		return adminRepository.findById(adminId).map(adminMapper:: mapToAdminResponse)
+				.orElseThrow(() -> new AdminNotFoundByIdException("Admin Not Found By Id"));
+	}
+
+	public List<AdminResponse> findAllAdmin() {
+		return adminRepository.findAll().stream().map(adminMapper :: mapToAdminResponse).toList();
+	}
+	public AdminResponse updateAdminById(AdminRequest adminRequest,String adminId) {
+		return adminRepository.findById(adminId)
+				.map(exUser ->{adminMapper.mapToAdmin(adminRequest, exUser);
+				return adminRepository.save(exUser);})
+				.map(adminMapper::mapToAdminResponse)
+				.orElseThrow(()-> new AdminNotFoundByIdException("Failed Update the User"));
+	}
 }
