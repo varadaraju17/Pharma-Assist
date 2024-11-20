@@ -4,7 +4,8 @@ import org.springframework.stereotype.Service;
 
 import com.springboot.pharmaassit.entity.Pharmacy;
 import com.springboot.pharmaassit.exception.AdminNotFoundByIdException;
-
+import com.springboot.pharmaassit.exception.PharmacyNotFoundByAdminIdException;
+import com.springboot.pharmaassit.exception.PharmacyNotFoundByIdException;
 import com.springboot.pharmaassit.mapper.PharmacyMapper;
 import com.springboot.pharmaassit.repository.AdminRepository;
 import com.springboot.pharmaassit.repository.PharmacyRepository;
@@ -40,7 +41,20 @@ public class PharmacyService {
 		}).orElseThrow(()-> new AdminNotFoundByIdException("Admin NOt Found By ID"));
 
 	}
-
+	public PharmacyResponse findPharmacyByAdminId(String adminId) {
+		return adminRepository.findById(adminId).map((admin) ->
+		{
+			Pharmacy pharmacy =admin.getPharmacy();
+			return mapper.mapToPharmacyResponse(pharmacy);
+		}).orElseThrow(() -> new PharmacyNotFoundByAdminIdException("pharmacy not found by admin Id"));
+	}
+	public PharmacyResponse updatePharmacy(PharmacyRequest pharmacyRequest, String pharmacyId) {
+		return pharmacyRepository.findById(pharmacyId).map((exPharmacy) -> {
+			mapper.mapToPharmacy(pharmacyRequest, exPharmacy);
+			return pharmacyRepository.save(exPharmacy);
+		}).map(mapper :: mapToPharmacyResponse)
+				.orElseThrow(()-> new PharmacyNotFoundByIdException("Pharmacy not found by pharmacy ID") );
+	}
 	
 
 }
