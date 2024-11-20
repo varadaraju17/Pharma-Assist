@@ -15,6 +15,17 @@ public class Admin {
 	private String phoneNumber;
 	private String password;
 	
+	@OneToOne
+	private Pharmacy pharmacy;
+	
+	
+	public Pharmacy getPharmacy() {
+		return pharmacy;
+	}
+	public void setPharmacy(Pharmacy pharmacy) {
+		this.pharmacy = pharmacy;
+	}
+	
 	public String getAdminId() {
 		return adminId;
 	}
