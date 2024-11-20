@@ -45,5 +45,16 @@ public class PatientController {
 		PatientResponse patientResponse= patientService.savePatient(patientRequest, pharmacyId);
 		return appResponseBuilder.success(HttpStatus.CREATED,"Patient Created Succesfully", patientResponse);
 	}
-	
+	@Operation(description = "The end point used find the patient based on the pharmacy id ",
+			responses = {
+					@ApiResponse(responseCode = "302",description = "pharmacy found "),
+					@ApiResponse(responseCode = "404",description = "pharmacy not found by Id",
+					content = {@Content(schema = @Schema(implementation = ErrorStructure.class))
+					})
+	})
+	@PostMapping("/patients")
+	public ResponseEntity<ResponseStructure<PatientResponse>> updatePatient(@RequestBody PatientRequest patientRequest, @PathVariable String patientId){
+		PatientResponse patientResponse= patientService.updatePatient(patientRequest, patientId);
+		return appResponseBuilder.success(HttpStatus.OK, "Patient Updated Succesfully", patientResponse);
+	}
 }
