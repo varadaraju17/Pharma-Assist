@@ -43,5 +43,30 @@ public ResponseEntity<ResponseStructure<PharmacyResponse>> addPharmacy(@RequestB
 	PharmacyResponse response = pharmacyService.addPharmacy(pharmacyRequest, adminId);
 	return appResponseBuilder.success(HttpStatus.CREATED,"pharmacy created succesfully", response);
 }
+@Operation(description = "The end point used find the pharmacy based on the admin id ",
+responses = {
+		@ApiResponse(responseCode = "302",description = "pharmacy found "),
+		@ApiResponse(responseCode = "404",description = "pharmacy not found by Id",
+		content = {@Content(schema = @Schema(implementation = ErrorStructure.class))
+		})
+})
+@GetMapping("/admins/{adminId}/pharmacy")
+public ResponseEntity<ResponseStructure<PharmacyResponse>> findPharmacyByAdminId(@PathVariable String adminId){
+	PharmacyResponse response= pharmacyService.findPharmacyByAdminId(adminId);
+	return appResponseBuilder.success(HttpStatus.FOUND, "Pharmacy founded by Admin Id Succcesfully", response);
+}
+@Operation(description = "The end point used find the pharmacy based on the admin id ",
+responses = {
+		@ApiResponse(responseCode = "302",description = "pharmacy found "),
+		@ApiResponse(responseCode = "404",description = "pharmacy not found by Id",
+		content = {@Content(schema = @Schema(implementation = ErrorStructure.class))
+		})
+})
+@PutMapping("/pharmacy/{pharmacyId}")
+public ResponseEntity<ResponseStructure<PharmacyResponse>> updatePharmacy(@RequestBody PharmacyRequest pharmacyRequest,
+		@PathVariable String pharmacyId){
+	PharmacyResponse response =pharmacyService.updatePharmacy(pharmacyRequest, pharmacyId);
+	return appResponseBuilder.success(HttpStatus.OK,"pharmacy updated successfully!!", response);
+}
 
 }

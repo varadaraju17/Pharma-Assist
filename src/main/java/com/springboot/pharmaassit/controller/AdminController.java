@@ -80,4 +80,5 @@ public class AdminController {
 		AdminResponse adminResponse = adminService.updateAdminById(adminRequest, adminId);
 		return appResponseBuilder.success(HttpStatus.OK, "admin updated by id succesfuly", adminResponse);
 	}
+	
 }
