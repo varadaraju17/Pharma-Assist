@@ -38,6 +38,10 @@ public class TransactionController {
 		TransactionResponse response=  transactionService.createTransaction(pharmacyId, medicineId, quantity, transactionType);
 		return appResponseBuilder.success(HttpStatus.ACCEPTED,"Transaction Created Succcessfully ", response);
 	}
-
+	 @DeleteMapping("/clear")
+	    public ResponseEntity<List<Transaction>> clearAllTransactions() {
+	        List<Transaction> clearedTransactions = transactionService.getAllTransactionsAndClear();
+	        return ResponseEntity.ok(clearedTransactions);
+	    }
 	 
 }
