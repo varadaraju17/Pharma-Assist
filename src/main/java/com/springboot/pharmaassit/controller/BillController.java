@@ -33,5 +33,14 @@ public class BillController {
         return appResponseBuilder.success(HttpStatus.CREATED,"Bill is Created", response);
     }
 
-    
+    @GetMapping("bills/{billId}/pdf")
+    public ResponseEntity<byte[]> generateBillPdf(@PathVariable String billId) throws DocumentException  {
+        byte[] pdf = billService.generateBillPdf(billId);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(ContentDisposition.inline().filename("bill.pdf").build()); // Use build() here
+
+        return ResponseEntity.ok().headers(headers).body(pdf);
+    }
 }

@@ -10,6 +10,7 @@ import com.lowagie.text.DocumentException;
 import com.springboot.pharmaassit.entity.Bill;
 import com.springboot.pharmaassit.entity.Patient;
 import com.springboot.pharmaassit.entity.Transaction;
+import com.springboot.pharmaassit.exception.BillNotFoundException;
 import com.springboot.pharmaassit.exception.NoTransactionsFoundException;
 import com.springboot.pharmaassit.exception.PatientNotFoundByIdException;
 import com.springboot.pharmaassit.mapper.BillMapper;
@@ -32,6 +33,9 @@ public class BillService {
 
     @Autowired
     private BillMapper mapper;
+    
+    @Autowired
+    private ThymeleafService thymeleafService;
 
     public BillResponse createBill(String patientId) {
         Patient patient = patientRepository.findById(patientId)
@@ -55,6 +59,12 @@ public class BillService {
         bill.setDateTime(LocalDate.now());
 
         return mapper.mapToBillResponse(bill);
+    }
+    public byte[] generateBillPdf(String billId) throws DocumentException {
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() -> new BillNotFoundException("Bill not found with ID: " + billId));
+
+        return thymeleafService.generatePdf("bill-template", bill);
     }
 
 }
